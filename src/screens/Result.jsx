@@ -99,19 +99,26 @@ function formatCurrency(value) {
  * @param {{ weeklyIncome: string, savings: string }} finances - Finance answers.
  * @param {{ suburb: string, type: string, bedrooms: number, weeklyRent: number,
  *           availableFrom: string }|null} selectedHome - The chosen sample home.
+ * @param {object|null} savedCheck - The server's saved result (POST
+ *        /api/assessments response); preferred over local calculation so
+ *        the gauge shows exactly what was stored. Falls back to the
+ *        client-side model when absent.
  * @param {() => void} onApplyAnotherHome - Returns to Choose a home keeping
  *        everything already entered.
  * @param {() => void} onEditAbout - Returns to About you when something the
  *        result needs (e.g. the move-in date) is missing.
- * @param {() => void} onRestart - Wipes all state and returns to Login,
- *        demonstrating that no data is persisted anywhere.
+ * @param {() => void} onOpenChecks - Opens the My checks history screen.
+ * @param {() => void} onRestart - Wipes local answers and returns to the
+ *        start of the flow (the account and its saved checks stay).
  */
 export default function Result({
   about,
   finances,
   selectedHome,
+  savedCheck,
   onApplyAnotherHome,
   onEditAbout,
+  onOpenChecks,
   onRestart,
 }) {
   const assessment = {
@@ -120,7 +127,7 @@ export default function Result({
     rentalHistory: about.rentalHistory,
     reference: about.reference,
   };
-  const result = calculateLikelihood(
+  const localResult = calculateLikelihood(
     {
       weeklyIncome: finances.weeklyIncome,
       weeklyRent: selectedHome ? selectedHome.weeklyRent : 0,
@@ -128,6 +135,19 @@ export default function Result({
     },
     assessment
   );
+  // The server's stored score wins; the local model (parity-tested against
+  // the Python port) is the fallback and feeds the What-if card below.
+  const result = savedCheck
+    ? {
+        score: savedCheck.score,
+        rawScore: savedCheck.rawScore,
+        band: savedCheck.band,
+        outcome: savedCheck.outcome,
+        factors: savedCheck.factors,
+        caps: savedCheck.caps,
+        tips: savedCheck.tips,
+      }
+    : localResult;
   const { score, rawScore, band, outcome, factors, caps, tips } = result;
   const accent = BAND_ACCENT[band];
   const isReady = outcome === 'ready';
@@ -467,7 +487,10 @@ export default function Result({
           so the main buttons are always reachable on small screens. */}
       <div className="sticky bottom-0 -mx-6 -mb-6 mt-6 space-y-3 rounded-b-3xl border-t border-slate-100 bg-white/95 px-6 py-4 backdrop-blur-sm sm:-mx-8 sm:-mb-8 sm:px-8">
         <Button label="Apply for another home" onClick={onApplyAnotherHome} variant="primary" />
-        <Button label="Clear my details" onClick={onRestart} variant="secondary" />
+        <div className="flex gap-3">
+          <Button label="My checks" onClick={onOpenChecks} variant="secondary" className="flex-1" />
+          <Button label="Clear my details" onClick={onRestart} variant="secondary" className="flex-1" />
+        </div>
       </div>
     </ScreenShell>
   );

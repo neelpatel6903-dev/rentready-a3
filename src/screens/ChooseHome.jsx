@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { Building, Building2, Check, Home, Hotel } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Building, Building2, Check, Home, Hotel, LoaderCircle } from 'lucide-react';
 import InputField from '../components/InputField';
 import Button from '../components/Button';
 import ScreenShell from '../components/ScreenShell';
-import { LISTINGS } from '../data/listings';
+import { api } from '../api/client';
 import { SUBURBS } from '../data/suburbs';
 import { distanceKm } from '../utils/geo';
 import { formatAUDayMonth, parseISODate } from '../utils/dates';
@@ -20,12 +20,11 @@ const TYPE_ICONS = {
 
 /**
  * ChooseHome
- * Screen 3 — "Choose a home". Eight fictional sample homes anchored to the
- * renter's current suburb: nearest first, with straight-line distances,
- * availability measured against their move-in date, and a view-only
- * selector for browsing near a different suburb. Selecting a card sets the
- * weekly rent used everywhere downstream. Continue stays disabled until a
- * home is picked.
+ * Screen 3 — "Choose a home". Listings are fetched from GET /api/listings
+ * (Postgres), then sorted nearest-first against the reference suburb with
+ * client-side straight-line distances; availability is compared against
+ * the move-in date. Selecting a card sets the weekly rent used everywhere
+ * downstream. Continue stays disabled until a home is picked.
  *
  * Props:
  * @param {string} currentSuburb - The suburb chosen on About you (default anchor).
@@ -46,9 +45,29 @@ export default function ChooseHome({
   // View-only anchor: switching this re-sorts and re-measures, but never
   // overwrites the suburb the user gave on About you.
   const [referenceSuburb, setReferenceSuburb] = useState(currentSuburb || SUBURBS[0].name);
+  const [listings, setListings] = useState(null); // null = loading
+  const [loadError, setLoadError] = useState(null);
+
+  const loadListings = async () => {
+    setLoadError(null);
+    setListings(null);
+    try {
+      const data = await api.get('/api/listings');
+      setListings(data.listings);
+    } catch (error) {
+      setListings([]);
+      setLoadError(error.message);
+    }
+  };
+
+  useEffect(() => {
+    loadListings();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const reference = SUBURBS.find((suburb) => suburb.name === referenceSuburb) || SUBURBS[0];
 
-  const listingsWithDistance = LISTINGS.map((listing) => ({
+  const listingsWithDistance = (listings || []).map((listing) => ({
     ...listing,
     distanceKmAway: distanceKm(reference.lat, reference.lng, listing.lat, listing.lng),
   })).sort((a, b) => a.distanceKmAway - b.distanceKmAway);
@@ -56,7 +75,7 @@ export default function ChooseHome({
   return (
     <ScreenShell
       progress={1}
-      footer="Sample homes only — not real listings, and nothing is saved."
+      footer="Sample homes only — not real listings. Your pick flows into your saved check."
     >
       <div className="mb-5">
         <h1 className="text-xl font-bold tracking-tight text-slate-900">
@@ -76,6 +95,26 @@ export default function ChooseHome({
         value={referenceSuburb}
         onChange={(_, value) => setReferenceSuburb(value)}
       />
+
+      {/* Loading / error / list — fetched from GET /api/listings */}
+      {listings === null && !loadError && (
+        <div className="flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-10 text-sm text-slate-500">
+          <LoaderCircle className="h-4 w-4 motion-safe:animate-spin" aria-hidden="true" />
+          Loading homes…
+        </div>
+      )}
+
+      {loadError && (
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-4">
+          <p className="text-sm leading-relaxed text-amber-800">{loadError}</p>
+          <Button
+            label="Try again"
+            onClick={loadListings}
+            variant="secondary"
+            className="mt-3"
+          />
+        </div>
+      )}
 
       <div className="mt-4 space-y-3">
         {listingsWithDistance.map((listing) => {
@@ -150,9 +189,9 @@ export default function ChooseHome({
         })}
       </div>
 
-      {listingsWithDistance.length === 0 && (
+      {listings !== null && !loadError && listingsWithDistance.length === 0 && (
         <p className="mt-4 text-center text-sm text-slate-500">
-          No sample homes listed near {referenceSuburb} yet — try another suburb.
+          No homes listed near {referenceSuburb} yet — try another suburb.
         </p>
       )}
 

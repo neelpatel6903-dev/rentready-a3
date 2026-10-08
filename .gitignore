@@ -22,3 +22,19 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Python / FastAPI backend
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+
+# Server-side environment variables — never commit real Supabase keys.
+# (.env.local is already covered by *.local above.)
+.env
+.env.*
+!.env.example
+
+# Generated test fixtures (regenerate: rolldown scripts/score_fixture.js
+# --file scripts/score_fixture.bundle.mjs && node scripts/score_fixture.bundle.mjs)
+scripts/score_fixture.bundle.mjs

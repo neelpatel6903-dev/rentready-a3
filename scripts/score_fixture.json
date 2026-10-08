@@ -1,0 +1,289 @@
+﻿[
+  {
+    "name": "comfortable full-time renter",
+    "result": {
+      "score": 70,
+      "rawScore": 70,
+      "band": "Moderate likelihood",
+      "outcome": "ready",
+      "factors": [
+        {
+          "id": "affordability",
+          "label": "Affordability",
+          "max": 35,
+          "points": 5,
+          "detail": "Rent is 46.7% of your weekly income"
+        },
+        {
+          "id": "employment",
+          "label": "Employment",
+          "max": 20,
+          "points": 20,
+          "detail": "Full-time, over 12 months in the job"
+        },
+        {
+          "id": "history",
+          "label": "Rental history",
+          "max": 15,
+          "points": 15,
+          "detail": "3+ years of rental history"
+        },
+        {
+          "id": "references",
+          "label": "References",
+          "max": 10,
+          "points": 10,
+          "detail": "A previous landlord or agent reference"
+        },
+        {
+          "id": "savings",
+          "label": "Savings",
+          "max": 20,
+          "points": 20,
+          "detail": "Savings cover 14.3 weeks of rent"
+        }
+      ],
+      "caps": [],
+      "tips": [
+        "Looking at homes closer to 30% of your income could add up to 30 points."
+      ],
+      "rentSharePct": 46.7,
+      "weeksCovered": 14.3
+    }
+  },
+  {
+    "name": "rent-burdened casual worker with low savings",
+    "result": {
+      "score": 12,
+      "rawScore": 12,
+      "band": "Lower likelihood",
+      "outcome": "not-ready",
+      "factors": [
+        {
+          "id": "affordability",
+          "label": "Affordability",
+          "max": 35,
+          "points": 0,
+          "detail": "Rent is 120% of your weekly income"
+        },
+        {
+          "id": "employment",
+          "label": "Employment",
+          "max": 20,
+          "points": 7,
+          "detail": "Casual, under 3 months in the job"
+        },
+        {
+          "id": "history",
+          "label": "Rental history",
+          "max": 15,
+          "points": 5,
+          "detail": "First-time renter ΓÇö no track record yet"
+        },
+        {
+          "id": "references",
+          "label": "References",
+          "max": 10,
+          "points": 0,
+          "detail": "No reference available yet"
+        },
+        {
+          "id": "savings",
+          "label": "Savings",
+          "max": 20,
+          "points": 0,
+          "detail": "Savings cover 1.7 weeks of rent"
+        }
+      ],
+      "caps": [
+        {
+          "cap": 40,
+          "reason": "Most agents decline applications where rent is more than half of income."
+        },
+        {
+          "cap": 50,
+          "reason": "Most agents want to see at least four weeks of rent in savings for bond and upfront costs."
+        }
+      ],
+      "tips": [
+        "Looking at homes closer to 30% of your income could add up to 35 points.",
+        "Even one written reference ΓÇö an employer or past landlord ΓÇö lifts this straight away.",
+        "Getting past four weeks of rent in savings also removes the savings cap."
+      ],
+      "rentSharePct": 120,
+      "weeksCovered": 1.7
+    }
+  },
+  {
+    "name": "student with moderate history",
+    "result": {
+      "score": 28,
+      "rawScore": 28,
+      "band": "Lower likelihood",
+      "outcome": "not-ready",
+      "factors": [
+        {
+          "id": "affordability",
+          "label": "Affordability",
+          "max": 35,
+          "points": 0,
+          "detail": "Rent is 63.6% of your weekly income"
+        },
+        {
+          "id": "employment",
+          "label": "Employment",
+          "max": 20,
+          "points": 5,
+          "detail": "Student"
+        },
+        {
+          "id": "history",
+          "label": "Rental history",
+          "max": 15,
+          "points": 12,
+          "detail": "1 to 3 years of rental history"
+        },
+        {
+          "id": "references",
+          "label": "References",
+          "max": 10,
+          "points": 4,
+          "detail": "A personal reference only"
+        },
+        {
+          "id": "savings",
+          "label": "Savings",
+          "max": 20,
+          "points": 7,
+          "detail": "Savings cover 5.7 weeks of rent"
+        }
+      ],
+      "caps": [
+        {
+          "cap": 40,
+          "reason": "Most agents decline applications where rent is more than half of income."
+        }
+      ],
+      "tips": [
+        "Looking at homes closer to 30% of your income could add up to 35 points.",
+        "Longer time in the job and steadier work build this factor over time.",
+        "Eight or more weeks of rent in savings strengthens your buffer."
+      ],
+      "rentSharePct": 63.6,
+      "weeksCovered": 5.7
+    }
+  },
+  {
+    "name": "not working, employer reference, big savings",
+    "result": {
+      "score": 34,
+      "rawScore": 34,
+      "band": "Lower likelihood",
+      "outcome": "not-ready",
+      "factors": [
+        {
+          "id": "affordability",
+          "label": "Affordability",
+          "max": 35,
+          "points": 0,
+          "detail": "Rent is 103.3% of your weekly income"
+        },
+        {
+          "id": "employment",
+          "label": "Employment",
+          "max": 20,
+          "points": 0,
+          "detail": "Not currently working"
+        },
+        {
+          "id": "history",
+          "label": "Rental history",
+          "max": 15,
+          "points": 8,
+          "detail": "Under a year of rental history"
+        },
+        {
+          "id": "references",
+          "label": "References",
+          "max": 10,
+          "points": 6,
+          "detail": "An employer reference"
+        },
+        {
+          "id": "savings",
+          "label": "Savings",
+          "max": 20,
+          "points": 20,
+          "detail": "Savings cover 32.3 weeks of rent"
+        }
+      ],
+      "caps": [
+        {
+          "cap": 40,
+          "reason": "Most agents decline applications where rent is more than half of income."
+        }
+      ],
+      "tips": [
+        "Looking at homes closer to 30% of your income could add up to 35 points.",
+        "Any regular income helps ΓÇö even casual shifts count toward affordability.",
+        "Ask a past property manager for a written reference ΓÇö it strengthens this factor."
+      ],
+      "rentSharePct": 103.3,
+      "weeksCovered": 32.3
+    }
+  },
+  {
+    "name": "exact boundary 40% rent share and exactly 4 weeks savings",
+    "result": {
+      "score": 44,
+      "rawScore": 44,
+      "band": "Fair likelihood",
+      "outcome": "not-ready",
+      "factors": [
+        {
+          "id": "affordability",
+          "label": "Affordability",
+          "max": 35,
+          "points": 12,
+          "detail": "Rent is 40% of your weekly income"
+        },
+        {
+          "id": "employment",
+          "label": "Employment",
+          "max": 20,
+          "points": 13,
+          "detail": "Part-time, 3 to 12 months in the job"
+        },
+        {
+          "id": "history",
+          "label": "Rental history",
+          "max": 15,
+          "points": 8,
+          "detail": "Under a year of rental history"
+        },
+        {
+          "id": "references",
+          "label": "References",
+          "max": 10,
+          "points": 4,
+          "detail": "A personal reference only"
+        },
+        {
+          "id": "savings",
+          "label": "Savings",
+          "max": 20,
+          "points": 7,
+          "detail": "Savings cover 4 weeks of rent"
+        }
+      ],
+      "caps": [],
+      "tips": [
+        "Looking at homes closer to 30% of your income could add up to 23 points.",
+        "Eight or more weeks of rent in savings strengthens your buffer.",
+        "A landlord or employer reference is worth more than a personal one if you can get one."
+      ],
+      "rentSharePct": 40,
+      "weeksCovered": 4
+    }
+  }
+]

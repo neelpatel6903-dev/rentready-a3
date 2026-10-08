@@ -67,7 +67,7 @@ export default function Finances({
   return (
     <ScreenShell
       progress={2}
-      footer="Your answers stay on this device — they're only used to calculate your estimate."
+      footer="Your answers are used to score this check and saved to your account."
     >
       <div
         onBlur={(event) => {

@@ -41,10 +41,13 @@ const SUBURB_OPTIONS = SUBURBS.map((suburb) => ({ value: suburb.name, label: sub
  *        parent App component.
  * @param {(name: string, value: string) => void} onChange - lifts field
  *        changes up to the parent's form state.
- * @param {() => void} onNext - advances to Choose a home once valid.
- * @param {() => void} onBack - returns to Login.
+ * @param {() => Promise<void>} onNext - Saves the profile server-side,
+ *        then advances to Choose a home (App owns the save).
+ * @param {() => void} onBack - Signs out and returns to Login.
+ * @param {boolean} saving - True while the profile save is in flight.
+ * @param {string|null} saveError - Server error shown above the buttons.
  */
-export default function AboutYou({ data, onChange, onNext, onBack }) {
+export default function AboutYou({ data, onChange, onNext, onBack, saving, saveError }) {
   const [touched, setTouched] = useState({});
   const [locationState, setLocationState] = useState('idle'); // 'idle' | 'locating' | 'unavailable'
 
@@ -110,7 +113,7 @@ export default function AboutYou({ data, onChange, onNext, onBack }) {
   return (
     <ScreenShell
       progress={0}
-      footer="Your information stays on this device — nothing is uploaded or stored."
+      footer="Your answers are saved to your account so we can prefill them next time."
     >
       <div
         onBlur={(event) => {
@@ -163,8 +166,8 @@ export default function AboutYou({ data, onChange, onNext, onBack }) {
             </p>
           )}
           <p className="text-xs leading-relaxed text-slate-500">
-            Your location stays on this device. It's only used to find your nearest suburb
-            and is never saved or sent anywhere.
+            Your precise location stays on this device — only the suburb we suggest is used,
+            and it's saved with the rest of your answers.
           </p>
           <InputField
             label="When do you want to move in?"
@@ -223,13 +226,22 @@ export default function AboutYou({ data, onChange, onNext, onBack }) {
           />
         </FormSection>
 
+        {saveError && (
+          <p
+            role="alert"
+            className="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm leading-relaxed text-red-700"
+          >
+            {saveError}
+          </p>
+        )}
+
         <div className="mt-8 flex gap-3">
-          <Button label="Back" onClick={onBack} variant="secondary" className="flex-1" />
+          <Button label="Sign out" onClick={onBack} variant="secondary" className="flex-1" />
           <Button
-            label="Continue"
-            onClick={() => isValid && onNext()}
+            label={saving ? 'Saving…' : 'Continue'}
+            onClick={() => isValid && !saving && onNext()}
             variant="primary"
-            disabled={!isValid}
+            disabled={!isValid || saving}
             className="flex-[2]"
           />
         </div>
