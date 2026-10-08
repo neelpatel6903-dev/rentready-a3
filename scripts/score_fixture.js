@@ -1,9 +1,23 @@
 /**
  * scripts/score_fixture.js
- * Prints score.js calculateLikelihood() results for the shared fixture cases
- * as JSON, so tests/test_scoring.py can prove the Python port matches.
- * Run: node scripts/score_fixture.js
+ * Writes score.js calculateLikelihood() results for the shared fixture cases to
+ * scripts/score_fixture.json, so tests/test_scoring.py can prove the Python
+ * port matches.
+ *
+ * The file is written with fs.writeFileSync in UTF-8 on purpose: generating it
+ * with a PowerShell `>` redirect prepends a BOM (json.loads() then refuses to
+ * parse it) and mangles the em-dashes into mojibake, which silently breaks the
+ * comparison the fixture exists to make.
+ *
+ * src/utils/score.js imports '../data/options' without a file extension, which
+ * plain Node ESM cannot resolve, so bundle first and then run the bundle:
+ *   node_modules/.bin/rolldown scripts/score_fixture.js --file scripts/score_fixture.bundle.mjs
+ *   node scripts/score_fixture.bundle.mjs
  */
+import { writeFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import { calculateLikelihood } from '../src/utils/score.js';
 
 const FIXTURES = [
@@ -63,4 +77,7 @@ const out = FIXTURES.map((fixture) => ({
   name: fixture.name,
   result: calculateLikelihood(fixture.finances, fixture.assessment),
 }));
-process.stdout.write(JSON.stringify(out, null, 2));
+
+const target = join(dirname(fileURLToPath(import.meta.url)), 'score_fixture.json');
+writeFileSync(target, `${JSON.stringify(out, null, 2)}\n`, 'utf8');
+process.stdout.write(`wrote ${out.length} fixture cases to ${target}\n`);

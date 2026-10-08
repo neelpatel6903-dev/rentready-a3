@@ -1,8 +1,8 @@
 """
-routes/assessments.py
+_routes/assessments.py
 POST a completed check (server scores it and stores the snapshot), list the
 user's history for the My checks screen, and delete individual checks.
-"Delete all my data" lives in routes/account.py.
+"Delete all my data" lives in _routes/account.py.
 """
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-﻿[
+[
   {
     "name": "comfortable full-time renter",
     "result": {
@@ -78,7 +78,7 @@
           "label": "Rental history",
           "max": 15,
           "points": 5,
-          "detail": "First-time renter ΓÇö no track record yet"
+          "detail": "First-time renter — no track record yet"
         },
         {
           "id": "references",
@@ -107,7 +107,7 @@
       ],
       "tips": [
         "Looking at homes closer to 30% of your income could add up to 35 points.",
-        "Even one written reference ΓÇö an employer or past landlord ΓÇö lifts this straight away.",
+        "Even one written reference — an employer or past landlord — lifts this straight away.",
         "Getting past four weeks of rent in savings also removes the savings cap."
       ],
       "rentSharePct": 120,
@@ -225,8 +225,8 @@
       ],
       "tips": [
         "Looking at homes closer to 30% of your income could add up to 35 points.",
-        "Any regular income helps ΓÇö even casual shifts count toward affordability.",
-        "Ask a past property manager for a written reference ΓÇö it strengthens this factor."
+        "Any regular income helps — even casual shifts count toward affordability.",
+        "Ask a past property manager for a written reference — it strengthens this factor."
       ],
       "rentSharePct": 103.3,
       "weeksCovered": 32.3

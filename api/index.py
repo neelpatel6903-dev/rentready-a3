@@ -10,13 +10,28 @@ Supabase keys anywhere in the frontend.
 """
 from __future__ import annotations
 
+import sys
+from pathlib import Path
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from ._lib.config import settings
-from ._lib.supabase import SupabaseError
-from .routes import account, assessments, auth, listings, profile
+# Vercel may load this file either as `api.index` (a package submodule) or as a
+# top-level `index` module, and relative imports only resolve in the first
+# case. Putting the project root on sys.path and importing `api.*` absolutely
+# makes the module load identically however Vercel picks it up — and under
+# local uvicorn, which is started as `uvicorn api.index:app` from the root.
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+# Underscore-prefixed on purpose: Vercel turns every plain .py file under api/
+# into its own serverless function, so `_lib` and `_routes` stay out of the
+# build and only api/index.py is deployed as the single FastAPI function.
+from api._lib.config import settings  # noqa: E402
+from api._lib.supabase import SupabaseError  # noqa: E402
+from api._routes import account, assessments, auth, listings, profile  # noqa: E402
 
 app = FastAPI(
     title="RentReady API",

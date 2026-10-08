@@ -88,6 +88,23 @@ def _number(value: Any) -> float:
     return result if result == result else 0.0  # NaN check
 
 
+def js_number(value: float | None) -> int | float | None:
+    """
+    Render a number the way JavaScript does.
+
+    JS has a single Number type, so `${rentSharePct}` in score.js prints "120"
+    for a whole value and "33.3" for a decimal one. A Python float always keeps
+    its trailing ".0", so the port used to emit "Rent is 120.0% of your weekly
+    income" and serialise rentSharePct as 120.0 — visibly different from the
+    client copy and different in the stored JSON. Returning an int for whole
+    values fixes both; genuine decimals pass through untouched (33.3 -> 33.3)
+    and None stays None.
+    """
+    if value is None:
+        return None
+    return int(value) if float(value).is_integer() else value
+
+
 def score_affordability(weekly_income: float, weekly_rent: float) -> dict:
     if weekly_income <= 0 or weekly_rent <= 0:
         return {"points": 0, "rent_share_pct": None,
@@ -105,10 +122,11 @@ def score_affordability(weekly_income: float, weekly_rent: float) -> dict:
         points = 5
     else:
         points = 0
+    share = js_number(rent_share_pct)
     return {
         "points": points,
-        "rent_share_pct": rent_share_pct,
-        "detail": f"Rent is {rent_share_pct}% of your weekly income",
+        "rent_share_pct": share,
+        "detail": f"Rent is {share}% of your weekly income",
     }
 
 
@@ -153,10 +171,11 @@ def score_savings(savings: float, weekly_rent: float) -> dict:
         points = 7
     else:
         points = 0
+    weeks = js_number(weeks_covered)
     return {
         "points": points,
-        "weeks_covered": weeks_covered,
-        "detail": f"Savings cover {weeks_covered} weeks of rent",
+        "weeks_covered": weeks,
+        "detail": f"Savings cover {weeks} weeks of rent",
     }
 
 
@@ -170,6 +189,12 @@ def evaluate_caps(rent_share_pct: float | None, weeks_covered: float | None) -> 
         })
     if weeks_covered is not None and weeks_covered < 4:
         caps.append({
+            "cap": 50,
+            "reason": "Most agents want to see at least four weeks of rent in savings "
+                      "for bond and upfront costs.",
+        })
+    return caps
+
 
 def build_tips(factors: list[dict], assessment: dict,
                weeks_covered: float | None) -> list[str]:
@@ -290,9 +315,3 @@ def calculate_likelihood(
         "rentSharePct": affordability["rent_share_pct"],
         "weeksCovered": savings_factor["weeks_covered"],
     }
-
-            "cap": 50,
-            "reason": "Most agents want to see at least four weeks of rent in savings "
-                      "for bond and upfront costs.",
-        })
-    return caps

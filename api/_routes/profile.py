@@ -1,5 +1,5 @@
 """
-routes/profile.py
+_routes/profile.py
 GET/PUT the signed-in user's About-you profile (public.profiles, RLS-protected).
 Prefills the AboutYou screen on return visits.
 """

@@ -1,5 +1,5 @@
 """
-routes/account.py
+_routes/account.py
 "Delete all my data" — removes the user's profile, every saved check, and
 finally the Supabase auth account itself. Order matters: app data first (it
 cascades off auth.users anyway, but explicit deletion works even if account

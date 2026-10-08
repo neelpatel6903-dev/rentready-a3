@@ -1,5 +1,5 @@
 """
-routes/auth.py
+_routes/auth.py
 Signup, login, logout and session introspection. All calls go through
 httpx to Supabase's Auth API; the browser only ever sees RentReady JSON and
 receives an access token to keep in sessionStorage.

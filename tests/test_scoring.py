@@ -3,7 +3,8 @@ tests/test_scoring.py
 Parity tests: the Python scoring port must produce byte-identical results
 to src/utils/score.js for the shared fixture cases.
 
-Run: node scripts/score_fixture.js > scripts/score_fixture.json   (once)
+Run: node_modules/.bin/rolldown scripts/score_fixture.js --file scripts/score_fixture.bundle.mjs
+     node scripts/score_fixture.bundle.mjs   (writes scripts/score_fixture.json, UTF-8, no BOM)
      .venv/Scripts/python.exe -m pytest tests/ -q
 """
 import json
