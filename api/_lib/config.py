@@ -3,9 +3,11 @@ config.py
 Environment-driven settings for the RentReady API.
 
 SUPABASE_URL and SUPABASE_ANON_KEY are read here and nowhere else — never
-from VITE_-prefixed variables, never in the browser bundle. On Vercel they
-come from the project's Environment Variables; locally from .env.local or
-the shell. Failing fast at import time means a broken deploy is loud.
+from VITE_-prefixed variables, never in the browser bundle. They come from
+the process environment: Vercel's Environment Variables in production, or
+values exported in the terminal before starting uvicorn locally. No dotenv
+file is loaded, so a .env.local never reaches this module. Failing fast on
+first use means a broken deploy is loud.
 """
 import os
 
@@ -19,8 +21,9 @@ def _require(name: str) -> str:
     if not value:
         raise SettingsError(
             f"Missing required environment variable {name}. "
-            "Set it in .env.local for development or in Vercel → Settings → "
-            "Environment Variables for deployment."
+            "Export it in the terminal before starting uvicorn for local "
+            "runs, or set it in Vercel → Settings → Environment Variables "
+            "for deployment."
         )
     return value
 
